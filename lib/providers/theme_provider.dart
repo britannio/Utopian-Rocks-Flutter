@@ -10,7 +10,7 @@ class ThemeProvider {
     }
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
-    String themeString = prefs.getString('theme') ?? themeMap[Themes.dark];
+    String themeString = prefs.getString('theme') ?? themeMap[Themes.light];
 
     if (themeString == themeMap[Themes.dark]) {
       _theme = Themes.dark;

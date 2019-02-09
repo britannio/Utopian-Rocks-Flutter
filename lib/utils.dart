@@ -62,13 +62,13 @@ void launchUrl(String url) async {
 
 const iconColors = <String, Color>{
   'ideas': Color(0xFF4DD39F),
-  'development': Color(0xFF565758),
+  'development': Color(0xFF838485),
   'bug-hunting': Color(0xffdb524c),
   'translations': Color(0xffffcf26),
   'graphics': Color(0xfff8a700),
   'analysis': Color(0xff174265),
   'documentation': Color(0xffa0a0a0),
-  'tutorials': Color(0xFF792a51),
+  'tutorials': Color(0xFF782c51),
   'video-tutorials': Color(0xFFec3424),
   'copywriting': Color(0xFF007f80),
   'blog': Color(0xff0275d8),

@@ -12,7 +12,7 @@ class ThemeBloc {
   final ThemeProvider themeProvider;
 
   BehaviorSubject<Themes> _selectedTheme =
-      BehaviorSubject<Themes>(seedValue: Themes.dark);
+      BehaviorSubject<Themes>(seedValue: Themes.light);
 
   Stream<Themes> get getTheme => _selectedTheme.stream;
   Sink<Themes> get setTheme => _selectedTheme.sink;
@@ -22,7 +22,6 @@ class ThemeBloc {
     // TODO listen to theme changes and update shared preferences
     themeProvider.getTheme().then(setTheme.add);
     _selectedTheme.distinct().listen(themeProvider.setTheme);
-
   }
 
   void dispose() {

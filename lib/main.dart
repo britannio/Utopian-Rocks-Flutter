@@ -67,7 +67,7 @@ class MyApp extends StatelessWidget {
         onSecondary: Colors.black,
         surface: Colors.white,
         onSurface: Colors.black,
-        background: Color(0xFFf6f8fa),
+        background: Colors.white, //Color(0xFFf6f8fa),
         onBackground: Colors.black,
       ),
       fontFamily: 'Quantico',
@@ -138,6 +138,4 @@ class MyApp extends StatelessWidget {
 //    always hide category icons, switch themes, show comment/vote count and rank
 // TODO name this
 // TODO add icon
-// TODO use git
-// TODO fix 'stream already listened to' bug
 // make contribution abstractions to prevent use of utils.dart within the _content widget

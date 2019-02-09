@@ -1,5 +1,11 @@
 import 'package:flutter/material.dart';
 
+// TODO ABOUT DIALOG
+// My website
+// My github
+// A short description
+
+
 class AboutAppDialog {
   final BuildContext context;
 

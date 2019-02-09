@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+
 import 'package:utopian_rocks_2/bloc_providers/base_provider.dart';
 import 'package:utopian_rocks_2/blocs/contribution_bloc.dart';
 import 'package:utopian_rocks_2/blocs/steem_bloc.dart';
 import 'package:utopian_rocks_2/providers/steem_api.dart';
 import 'package:utopian_rocks_2/utils.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:utopian_rocks_2/views/content_page.dart';
+import 'package:utopian_rocks_2/views/contribution_page.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -24,6 +25,7 @@ class HomePageState extends State<HomePage> {
       body: SafeArea(
         child: Stack(
           children: <Widget>[
+            // Content
             Positioned.fill(
               child: Padding(
                   // Leaves space for the left vertical tabs
@@ -31,7 +33,7 @@ class HomePageState extends State<HomePage> {
                   child: BlocProvider<SteemBloc>(
                     builder: (_, bloc) => bloc ?? SteemBloc(SteemApi()),
                     onDispose: (_, bloc) => bloc.dispose(),
-                    child: ContentPage(),
+                    child: ContributionPage(),
                   )),
             ),
             Positioned(
@@ -40,39 +42,26 @@ class HomePageState extends State<HomePage> {
               left: 0,
               child: Material(
                 color: Theme.of(context).colorScheme.secondary,
+                elevation: 4,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.max,
                   children: <Widget>[
                     _toggleTab(context),
-                    _tab(
-                      context,
-                      id: 'all',
-                      friendlyName: 'All',
-                      imgPath: 'assets/images/all.png',
-                    ),
-                    _tab(context, id: 'analysis', friendlyName: 'Analysis'),
-                    _tab(
-                      context,
-                      id: 'anti-abuse',
-                      friendlyName: 'Anti-Abuse',
-                    ),
-                    _tab(context, id: 'blog', friendlyName: 'Blog'),
-                    _tab(context,
-                        id: 'bug-hunting', friendlyName: 'Bug Hunting'),
-                    _tab(context,
-                        id: 'copywriting', friendlyName: 'Copywriting'),
-                    _tab(context,
-                        id: 'development', friendlyName: 'Development'),
-                    _tab(context, id: 'graphics', friendlyName: 'Graphics'),
-                    _tab(context,
-                        id: 'iamutopian', friendlyName: 'I Am Utopian'),
-                    _tab(context, id: 'ideas', friendlyName: 'Ideas'),
-                    _tab(context, id: 'social', friendlyName: 'Social'),
-                    _tab(context,
-                        id: 'translations', friendlyName: 'Translations'),
-                    _tab(context, id: 'tutorials', friendlyName: 'Tutorials'),
-                    _tab(context,
-                        id: 'video-tutorials', friendlyName: 'Video Tutorials'),
+                    _tab(context, id: 'all', imgPath: 'assets/images/all.png'),
+                    _tab(context, id: 'analysis'),
+                    _tab(context, id: 'anti-abuse'),
+                    _tab(context, id: 'blog'),
+                    _tab(context, id: 'bug-hunting'),
+                    _tab(context, id: 'copywriting'),
+                    _tab(context, id: 'development'),
+                    _tab(context, id: 'graphics'),
+                    _tab(context, id: 'iamutopian'),
+                    _tab(context, id: 'ideas'),
+                    _tab(context, id: 'social'),
+                    _tab(context, id: 'translations'),
+                    _tab(context, id: 'tutorials'),
+                    _tab(context, id: 'video-tutorials'),
                   ],
                 ),
               ),
@@ -113,7 +102,6 @@ class HomePageState extends State<HomePage> {
   Widget _tab(
     BuildContext context, {
     @required String id,
-    @required String friendlyName,
     String imgPath,
   }) {
     bool selected = selectedId == id;
@@ -125,7 +113,7 @@ class HomePageState extends State<HomePage> {
       width: wideTabs ? 160 : 48,
       duration: Duration(milliseconds: 200),
       child: Tooltip(
-        message: friendlyName,
+        message: formattedCategories[id],
         child: Material(
           borderRadius: BorderRadius.only(
             topRight: Radius.circular(30),
@@ -159,8 +147,9 @@ class HomePageState extends State<HomePage> {
                             image: AssetImage(imgPath),
                             fit: BoxFit.contain,
                             colorFilter: ColorFilter.mode(
-                                selected ? Colors.white : iconColors[id],
-                                BlendMode.srcATop),
+                              selected ? Colors.white : iconColors[id],
+                              BlendMode.srcATop,
+                            ),
                           ),
                         ),
                       )
@@ -173,10 +162,12 @@ class HomePageState extends State<HomePage> {
                       ),
                 wideTabs
                     ? Text(
-                        friendlyName,
+                        formattedCategories[id],
                         style: TextStyle(
-                            color: Theme.of(context).colorScheme.onSecondary,
-                            fontFamily: 'Quantico'),
+                          color: selected
+                              ? Colors.white
+                              : Theme.of(context).colorScheme.onSecondary,
+                        ),
                       )
                     : Container(),
               ],
