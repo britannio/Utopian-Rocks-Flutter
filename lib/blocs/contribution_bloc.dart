@@ -24,7 +24,8 @@ class ContributionBloc {
       BehaviorSubject<String>(seedValue: 'pending');
 
   // Category filter
-  BehaviorSubject<String> _filter = BehaviorSubject<String>(seedValue: 'all');
+  BehaviorSubject<List<String>> _filter =
+      BehaviorSubject<List<String>>(seedValue: ['all']);
 
   // Getters
   Stream<List<Contribution>> get pendingReviewStream =>
@@ -32,21 +33,42 @@ class ContributionBloc {
   Stream<List<Contribution>> get pendingUpvoteStream =>
       _filteredPendingUpvoteStream;
 
-  Sink<String> get filter => _filter;
-  Stream<String> get filterStream => _filter.stream;
+  //Sink<String> get filter => _filter;
+  Stream<List<String>> get filterStream => _filter.stream;
 
   ContributionBloc(this.rocksApi) {
     _pendingReviewStream = _pendingReviewName
-        .asyncMap((page) => rocksApi.getContributions(pageName: page)).asBroadcastStream();
+        .asyncMap((page) => rocksApi.getContributions(pageName: page))
+        .asBroadcastStream();
 
     _pendingUpvoteStream = _pendingUpvoteName
-        .asyncMap((page) => rocksApi.getContributions(pageName: page)).asBroadcastStream();
+        .asyncMap((page) => rocksApi.getContributions(pageName: page))
+        .asBroadcastStream();
 
     _filteredPendingReviewStream =
-        Observable.combineLatest2(_filter, _pendingReviewStream, applyFilter).asBroadcastStream();
+        Observable.combineLatest2(_filter, _pendingReviewStream, applyFilter)
+            .asBroadcastStream();
 
     _filteredPendingUpvoteStream =
-        Observable.combineLatest2(_filter, _pendingUpvoteStream, applyFilter).asBroadcastStream();
+        Observable.combineLatest2(_filter, _pendingUpvoteStream, applyFilter)
+            .asBroadcastStream();
+
+    // TODO FOR DEBUGGING PURPOSES
+    _filter.listen((filterList) => print('Current filters $filterList'));
+  }
+
+  List<String> filterList = ['all'];
+
+  void addFilter(String filter) {
+    filterList.add(filter);
+    _filter.add(filterList);
+  }
+
+  void removeFilter(String filter) {
+    if (filterList.length > 1) {
+      filterList.remove(filter);
+    }
+    _filter.add(filterList);
   }
 
   void dispose() {

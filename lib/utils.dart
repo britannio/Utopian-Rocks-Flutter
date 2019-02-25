@@ -6,12 +6,12 @@ import 'package:utopian_rocks_2/models/contribution_model.dart';
 //import 'package:utopian_rocks/models/model.dart';
 
 List<Contribution> applyFilter(
-  String filter,
+  List<String> filter,
   List<Contribution> contributions,
 ) {
-  if (filter != 'all') {
-    // .contains allows multiple filters to be used
-    return contributions.where((con) => filter == con.category).toList();
+  if (filter.isNotEmpty && !(filter.contains('all') && filter.length == 1)) {
+    return contributions.where((con) => filter.contains(con.category)).toList();
+    // TODO make sure it distinguishes Tutorials and Video-Tutorials
   }
 
   return contributions;
@@ -100,21 +100,21 @@ const icons = <String, int>{
 };
 
 const categories = [
-  'ideas',
-  'development',
-  'bug-hunting',
-  'translations',
-  'graphics',
-  'analysis',
-  'documentation',
-  'tutorials',
-  'video-tutorials',
-  'copywriting',
-  'blog',
-  'social',
-  'anti-abuse',
   'all',
-  'iamutopian'
+  'analysis',
+  'anti-abuse',
+  'blog',
+  'bug-hunting',
+  'copywriting',
+  'development',
+  'documentation',
+  'graphics',
+  'iamutopian',
+  'ideas',
+  'social',
+  'translations',
+  'tutorials',
+  'video-tutorials'
 ];
 
 const formattedCategories = <String, String>{
@@ -134,5 +134,3 @@ const formattedCategories = <String, String>{
   'all': 'All',
   'iamutopian': 'I Am Utopian'
 };
-
-

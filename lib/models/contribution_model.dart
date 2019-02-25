@@ -1,4 +1,3 @@
-
 class Contribution {
   final String author;
   final String category;
@@ -7,21 +6,26 @@ class Contribution {
   final String created;
   final String reviewDate;
   final String title;
-  final double totalPayout;
   final String url;
   final String status;
+  final int totalComments;
+  final double totalPayout;
+  final int totalVotes;
 
   Contribution(
-      this.author,
-      this.category,
-      this.moderator,
-      this.repository,
-      this.created,
-      this.reviewDate,
-      this.title,
-      this.totalPayout,
-      this.url,
-      this.status);
+    this.author,
+    this.category,
+    this.moderator,
+    this.repository,
+    this.created,
+    this.reviewDate,
+    this.title,
+    this.totalPayout,
+    this.url,
+    this.status,
+    this.totalComments,
+    this.totalVotes,
+  );
 
   Contribution.fromJson(Map json)
       : author = json['author'],
@@ -32,11 +36,13 @@ class Contribution {
         repository = (json['repository'] as String)
             .replaceFirst('https://github.com/', ''),
         title = json['title'],
-        totalPayout = json['total_payout'] as double,
         url = json['url'],
         created = json['created'],
         reviewDate = json['review_date'],
-        status = json['status'];
+        status = json['status'],
+        totalComments = json['total_comments'] as int,
+        totalPayout = json['total_payout'] as double,
+        totalVotes = json['total_votes'];
 }
 
 // Utopian rocks API

@@ -138,4 +138,7 @@ class MyApp extends StatelessWidget {
 //    always hide category icons, switch themes, show comment/vote count and rank
 // TODO name this
 // TODO add icon
-// make contribution abstractions to prevent use of utils.dart within the _content widget
+// TODO make contribution abstractions to prevent use of utils.dart within the _content widget
+// TODo enable expanding of botton app bar
+// TODO Use a persistent bottom sheet instead of a bottom app bar for category selection
+// TODO add dialog to customise contribution view(multiple check boxes) and app theme(dropdown), all with sp persistense

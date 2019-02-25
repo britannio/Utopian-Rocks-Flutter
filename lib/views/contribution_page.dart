@@ -1,15 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import 'package:utopian_rocks_2/bloc_providers/base_provider.dart';
 import 'package:utopian_rocks_2/blocs/contribution_bloc.dart';
-import 'package:utopian_rocks_2/blocs/steem_bloc.dart';
 import 'package:utopian_rocks_2/components/dialogs/about_dialog.dart';
 import 'package:utopian_rocks_2/components/dialogs/change_theme_dialog.dart';
 import 'package:utopian_rocks_2/models/contribution_model.dart';
 import 'package:utopian_rocks_2/utils.dart';
-import 'package:utopian_rocks_2/views/settings_page.dart';
 
 class ContributionPage extends StatelessWidget {
   @override
@@ -30,7 +27,7 @@ class ContributionPage extends StatelessWidget {
                 ],
               ),
             ),
-            _stats(context),
+            //_stats(context),
           ],
         ),
       ),
@@ -63,6 +60,7 @@ class ContributionPage extends StatelessWidget {
                   Icons.more_vert,
                   color: Theme.of(context).colorScheme.onPrimary,
                 ),
+                padding: EdgeInsets.all(0),
                 itemBuilder: (BuildContext context) {
                   return options.map((String option) {
                     return PopupMenuItem<String>(
@@ -121,57 +119,46 @@ class ContributionPage extends StatelessWidget {
     );
   }
 
-  Widget _stats(BuildContext context) {
+  /* Widget _stats(BuildContext context) {
     final steemBloc = Provider.of<SteemBloc>(context);
     return Column(
       children: <Widget>[
         Divider(
           height: 0,
         ),
-        SizedBox(height: 8),
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: 8),
-          child: Material(
-            elevation: 0,
-            borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(8),
-              topRight: Radius.circular(8),
-            ),
-            color: Theme.of(context).colorScheme.surface,
-            child: Container(
-              padding: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        Container(
+          color: Theme.of(context).colorScheme.surface,
+          padding: EdgeInsets.symmetric(vertical: 4),
+          child: Row(
+            children: <Widget>[
+              SizedBox(width: 6),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      StreamBuilder(
-                        stream: steemBloc.timer,
-                        builder: (context, timerSnapshot) => Text(
-                              'Next Vote Cycle: ${DateFormat.Hms().format(DateTime(0, 0, 0, 0, 0, timerSnapshot.data ?? 0))}',
-                              style: TextStyle(
-                                  color:
-                                      Theme.of(context).colorScheme.onSurface,
-                                  fontSize: 18,
-                                  fontFamily: 'Quantico'),
-                            ),
-                      ),
-                      StreamBuilder(
-                        stream: steemBloc.voteCount,
-                        // toStringAsPrecision(4) converts the double to 4 s.f.
-                        builder: (context, voteCountSnapshot) => Text(
-                              'Vote Power: ${voteCountSnapshot.data != 100.0 || null ? voteCountSnapshot.data?.toStringAsPrecision(4) ?? 0 : 100.0}',
-                              style: TextStyle(
-                                  color:
-                                      Theme.of(context).colorScheme.onSurface,
-                                  fontSize: 18,
-                                  fontFamily: 'Quantico'),
-                            ),
-                      ),
-                    ],
+                  StreamBuilder(
+                    stream: steemBloc.timer,
+                    builder: (context, timerSnapshot) => Text(
+                          'Next Vote Cycle: ${DateFormat.Hms().format(DateTime(0, 0, 0, 0, 0, timerSnapshot.data ?? 0))}',
+                          style: TextStyle(
+                              color: Theme.of(context).colorScheme.onSurface,
+                              fontSize: 18,
+                              fontFamily: 'Quantico'),
+                        ),
                   ),
-                  Row(
+                  StreamBuilder(
+                    stream: steemBloc.voteCount,
+                    // toStringAsPrecision(4) converts the double to 4 s.f.
+                    builder: (context, voteCountSnapshot) => Text(
+                          'Vote Power: ${voteCountSnapshot.data != 100.0 || null ? voteCountSnapshot.data?.toStringAsPrecision(4) ?? 0 : 100.0}',
+                          style: TextStyle(
+                              color: Theme.of(context).colorScheme.onSurface,
+                              fontSize: 18,
+                              fontFamily: 'Quantico'),
+                        ),
+                  ),
+                ],
+              ),
+              /* Row(
                     children: <Widget>[
                       Icon(FontAwesomeIcons.pencilAlt),
                       SizedBox(width: 8),
@@ -180,15 +167,13 @@ class ContributionPage extends StatelessWidget {
                         style: TextStyle(fontSize: 18),
                       )
                     ],
-                  ),
-                ],
-              ),
-            ),
+                  ), */
+            ],
           ),
         ),
       ],
     );
-  }
+  } */
 }
 
 class _Page extends StatefulWidget {
@@ -203,7 +188,8 @@ class __PageState extends State<_Page> with AutomaticKeepAliveClientMixin {
   bool get wantKeepAlive => true;
   bool useCards = false;
   bool showAvatar = true;
-  bool showStats = false;
+  bool showCategory = true;
+  bool showStats = true;
 
   @override
   Widget build(BuildContext context) {
@@ -223,8 +209,8 @@ class __PageState extends State<_Page> with AutomaticKeepAliveClientMixin {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
-            Padding(
-              padding: EdgeInsets.only(left: 12),
+            /*  Padding(
+              padding: EdgeInsets.only(left: 12,top: 8),
               child: StreamBuilder(
                 stream: contributionBloc.filterStream,
                 builder:
@@ -233,7 +219,7 @@ class __PageState extends State<_Page> with AutomaticKeepAliveClientMixin {
                     return Text(
                       '${formattedCategories[snapshot.data]}',
                       style: TextStyle(
-                        fontSize: 18,
+                        fontSize: 16,
                         fontWeight: FontWeight.w600,
                       ),
                     );
@@ -242,9 +228,9 @@ class __PageState extends State<_Page> with AutomaticKeepAliveClientMixin {
                   }
                 },
               ),
-            ),
+            ), */
             // Hide avatar checkbox, Show additional stats, switch between card and tile
-            Padding(
+            /* Padding(
               padding: EdgeInsets.only(right: 8),
               child: Tooltip(
                 message: 'Customise',
@@ -264,7 +250,7 @@ class __PageState extends State<_Page> with AutomaticKeepAliveClientMixin {
                   ),
                 ),
               ),
-            ),
+            ), */
           ],
         ),
         StreamBuilder(
@@ -310,6 +296,9 @@ class __PageState extends State<_Page> with AutomaticKeepAliveClientMixin {
                         'https://steemitimages.com/u/${snapshot.data[index].author}/avatar',
                     postUrl: snapshot.data[index].url,
                     contributionBloc: contributionBloc,
+                    votes: snapshot.data[index].totalVotes,
+                    payout: snapshot.data[index].totalPayout,
+                    comments: snapshot.data[index].totalComments,
                   );
                 });
           },
@@ -325,11 +314,14 @@ class __PageState extends State<_Page> with AutomaticKeepAliveClientMixin {
       @required Color iconColor,
       @required String avatarUrl,
       @required String postUrl,
-      @required ContributionBloc contributionBloc}) {
+      @required ContributionBloc contributionBloc,
+      @required int votes,
+      @required double payout,
+      @required int comments}) {
     return StreamBuilder(
         stream: contributionBloc.filterStream,
-        builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
-          String filter = snapshot.data;
+        builder: (BuildContext context, snapshot) {
+          //String filter = snapshot.data;
           return Padding(
             padding:
                 EdgeInsets.symmetric(vertical: 4, horizontal: useCards ? 8 : 0),
@@ -352,87 +344,123 @@ class __PageState extends State<_Page> with AutomaticKeepAliveClientMixin {
                         child: Padding(
                           padding:
                               EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
+                          child: Column(
                             children: <Widget>[
-                              Stack(
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
                                 children: <Widget>[
-                                  Padding(
-                                    padding: EdgeInsets.symmetric(vertical: 8),
-                                    child: CircleAvatar(
-                                      backgroundImage: NetworkImage(avatarUrl),
-                                      backgroundColor: Colors.grey.shade300,
+                                  showAvatar
+                                      ? Padding(
+                                          padding:
+                                              EdgeInsets.symmetric(vertical: 8),
+                                          child: CircleAvatar(
+                                            backgroundImage:
+                                                NetworkImage(avatarUrl),
+                                            backgroundColor:
+                                                Colors.grey.shade300,
+                                          ),
+                                        )
+                                      : Container(),
+                                  SizedBox(width: showAvatar ? 16 : 4),
+                                  Expanded(
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: <Widget>[
+                                        Text(
+                                          title,
+                                          style: TextStyle(
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w600,
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .onSurface,
+                                          ),
+                                          maxLines: 2,
+                                          overflow: TextOverflow.ellipsis,
+                                          textAlign: TextAlign.left,
+                                        ),
+                                        Text(
+                                          subtitle,
+                                          style: TextStyle(
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.w600,
+                                            color: Colors.grey,
+                                          ),
+                                          maxLines: 2,
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                      ],
                                     ),
                                   ),
-                                  Positioned.fill(
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                        color: Colors.black.withOpacity(0.1),
-                                        shape: BoxShape.circle,
-                                      ),
-                                    ),
-                                  ),
-                                  Positioned(
-                                      bottom: 0,
-                                      right: 0,
-                                      child: filter == 'all'
-                                          ? Icon(
-                                              IconData(
-                                                // Default icon
-                                                icon ?? 0x004e,
-                                                fontFamily: 'Utopicons',
-                                              ),
-                                              // Default color
-                                              color: iconColor ??
-                                                  Color(0xFFB10DC9),
-                                            )
-                                          : Container()),
+                                  SizedBox(width: 4),
+                                  showCategory
+                                      ? Icon(
+                                          IconData(
+                                            // Default icon
+                                            icon ?? 0x004e,
+                                            fontFamily: 'Utopicons',
+                                          ),
+                                          // Default color
+                                          color: iconColor ?? Color(0xFFB10DC9),
+                                        )
+                                      : Container(),
+                                  SizedBox(width: showCategory ? 4 : 0),
                                 ],
                               ),
-                              SizedBox(width: 16),
-                              Expanded(
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: <Widget>[
-                                    Text(
-                                      title,
-                                      style: TextStyle(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w600,
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .onSurface,
-                                      ),
-                                      maxLines: 2,
-                                      overflow: TextOverflow.ellipsis,
-                                      textAlign: TextAlign.left,
-                                    ),
-                                    Text(
-                                      subtitle,
-                                      style: TextStyle(
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.w600,
-                                        color: Colors.grey,
-                                      ),
-                                      maxLines: 2,
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              /* SizedBox(width: filter == 'all' ? 4 : 0),
-                              filter == 'all'
-                                  ? Icon(
-                                      IconData(
-                                        // Default icon
-                                        icon ?? 0x004e,
-                                        fontFamily: 'Utopicons',
-                                      ),
-                                      // Default color
-                                      color: iconColor ?? Color(0xFFB10DC9),
+                              showStats
+                                  ? Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceAround,
+                                      children: <Widget>[
+                                        Row(
+                                          children: <Widget>[
+                                            Icon(
+                                              FontAwesomeIcons.arrowUp,
+                                              size: 16,
+                                              color: Colors.grey,
+                                            ),
+                                            SizedBox(width: 4),
+                                            Text(votes.toString(),
+                                                style: TextStyle(
+                                                    color: Colors.grey))
+                                          ],
+                                        ),
+                                        Row(
+                                          children: <Widget>[
+                                            Icon(
+                                              FontAwesomeIcons.moneyCheckAlt,
+                                              size: 16,
+                                              color: Colors.grey,
+                                            ),
+                                            SizedBox(width: 8),
+                                            Text(
+                                              payout.toString(),
+                                              style:
+                                                  TextStyle(color: Colors.grey),
+                                            )
+                                          ],
+                                        ),
+                                        Row(
+                                          children: <Widget>[
+                                            Icon(
+                                              FontAwesomeIcons.solidCommentAlt,
+                                              size: 16,
+                                              color: Colors.grey,
+                                            ),
+                                            SizedBox(width: 4),
+                                            Text(
+                                              comments.toString(),
+                                              style:
+                                                  TextStyle(color: Colors.grey),
+                                            )
+                                          ],
+                                        ),
+                                      ],
                                     )
-                                  : Container() */
+                                  : Container(),
                             ],
                           ),
                         ),
