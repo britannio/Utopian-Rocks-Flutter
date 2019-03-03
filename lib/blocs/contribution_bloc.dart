@@ -60,8 +60,10 @@ class ContributionBloc {
   List<String> filterList = ['all'];
 
   void addFilter(String filter) {
-    filterList.add(filter);
-    _filter.add(filterList);
+    if (!filterList.contains(filter)) {
+      filterList.add(filter);
+      _filter.add(filterList);
+    }
   }
 
   void removeFilter(String filter) {
