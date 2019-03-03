@@ -3,9 +3,11 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import 'package:utopian_rocks_2/bloc_providers/base_provider.dart';
 import 'package:utopian_rocks_2/blocs/contribution_bloc.dart';
+import 'package:utopian_rocks_2/blocs/settings_bloc.dart';
 import 'package:utopian_rocks_2/components/dialogs/about_dialog.dart';
 import 'package:utopian_rocks_2/components/dialogs/change_theme_dialog.dart';
 import 'package:utopian_rocks_2/models/contribution_model.dart';
+import 'package:utopian_rocks_2/models/settings_model.dart';
 import 'package:utopian_rocks_2/utils.dart';
 
 class ContributionPage extends StatelessWidget {
@@ -35,7 +37,7 @@ class ContributionPage extends StatelessWidget {
   }
 
   Widget _appBar(BuildContext context) {
-    List<String> options = [/* 'About',  */ 'Theme'];
+    List<String> options = [/* 'About',  */ 'Customise'];
     return Material(
       color: Theme.of(context).colorScheme.primaryVariant,
       child: Column(
@@ -82,7 +84,7 @@ class ContributionPage extends StatelessWidget {
                         ),
                       );
                       break; */
-                    case 'theme':
+                    case 'customise':
                       ChangeThemeDialog(context);
                       break;
                   }
@@ -189,11 +191,12 @@ class __PageState extends State<_Page> with AutomaticKeepAliveClientMixin {
   bool useCards = false;
   bool showAvatar = true;
   bool showCategory = true;
-  bool showStats = true;
+  bool showStats = false;
 
   @override
   Widget build(BuildContext context) {
     final contributionBloc = Provider.of<ContributionBloc>(context);
+    final settingsBloc = Provider.of<SettingsBloc>(context);
     Stream<List<Contribution>> stream;
 
     switch (widget.pageName) {
@@ -254,88 +257,107 @@ class __PageState extends State<_Page> with AutomaticKeepAliveClientMixin {
           ],
         ),
         StreamBuilder(
-          stream: stream,
-          builder: (
-            BuildContext context,
-            AsyncSnapshot<List<Contribution>> snapshot,
-          ) {
-            // No data
-            if (!snapshot.hasData)
-              return Center(
-                child: CircularProgressIndicator(),
+          stream: settingsBloc.getSettings,
+          builder: (context, AsyncSnapshot<SettingsModel> settingsSnapshot) {
+            if (settingsSnapshot.hasData) {
+              return StreamBuilder(
+                stream: stream,
+                builder: (
+                  BuildContext context,
+                  AsyncSnapshot<List<Contribution>> snapshot,
+                ) {
+                  // No data
+                  if (!snapshot.hasData)
+                    return Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  // No data
+                  if (snapshot.data.length == 0) {
+                    return Center(
+                      child: Text(
+                        'No Contributions for this category',
+                        style: TextStyle(
+                            color: Theme.of(context).colorScheme.onBackground),
+                      ),
+                    );
+                  }
+                  return ListView.builder(
+                      padding: EdgeInsets.only(bottom: 4),
+                      itemCount: snapshot.data.length,
+                      primary: false,
+                      shrinkWrap: true,
+                      itemBuilder: (context, index) {
+                        String category = snapshot.data[index].category;
+                        int iconCode = icons[category];
+                        String repo = checkRepo(snapshot, index);
+                        String timestamp =
+                            convertTimestamp(snapshot, index, widget.pageName);
+                        Color categoryColor = iconColors[category];
+                        return _content(
+                          context,
+                          title: snapshot.data[index].title,
+                          subtitle: '$repo • $timestamp',
+                          icon: iconCode,
+                          iconColor: categoryColor,
+                          avatarUrl:
+                              'https://steemitimages.com/u/${snapshot.data[index].author}/avatar',
+                          postUrl: snapshot.data[index].url,
+                          contributionBloc: contributionBloc,
+                          votes: snapshot.data[index].totalVotes,
+                          payout: snapshot.data[index].totalPayout,
+                          comments: snapshot.data[index].totalComments,
+                          showAvatar: settingsSnapshot.data.show_avatar,
+                          showCard: settingsSnapshot.data.show_card,
+                          showCategory: settingsSnapshot.data.show_category,
+                          showStats: settingsSnapshot.data.show_stats,
+                        );
+                      });
+                },
               );
-            // No data
-            if (snapshot.data.length == 0) {
-              return Center(
-                child: Text(
-                  'No Contributions for this category',
-                  style: TextStyle(
-                      color: Theme.of(context).colorScheme.onBackground),
-                ),
-              );
+            } else {
+              return CircularProgressIndicator();
             }
-            return ListView.builder(
-                padding: EdgeInsets.only(bottom: 4),
-                itemCount: snapshot.data.length,
-                primary: false,
-                shrinkWrap: true,
-                itemBuilder: (context, index) {
-                  String category = snapshot.data[index].category;
-                  int iconCode = icons[category];
-                  String repo = checkRepo(snapshot, index);
-                  String timestamp =
-                      convertTimestamp(snapshot, index, widget.pageName);
-                  Color categoryColor = iconColors[category];
-                  return _content(
-                    context,
-                    title: snapshot.data[index].title,
-                    subtitle: '$repo • $timestamp',
-                    icon: iconCode,
-                    iconColor: categoryColor,
-                    avatarUrl:
-                        'https://steemitimages.com/u/${snapshot.data[index].author}/avatar',
-                    postUrl: snapshot.data[index].url,
-                    contributionBloc: contributionBloc,
-                    votes: snapshot.data[index].totalVotes,
-                    payout: snapshot.data[index].totalPayout,
-                    comments: snapshot.data[index].totalComments,
-                  );
-                });
           },
         ),
       ],
     );
   }
 
-  Widget _content(BuildContext context,
-      {@required String title,
-      @required String subtitle,
-      @required int icon,
-      @required Color iconColor,
-      @required String avatarUrl,
-      @required String postUrl,
-      @required ContributionBloc contributionBloc,
-      @required int votes,
-      @required double payout,
-      @required int comments}) {
+  Widget _content(
+    BuildContext context, {
+    @required String title,
+    @required String subtitle,
+    @required int icon,
+    @required Color iconColor,
+    @required String avatarUrl,
+    @required String postUrl,
+    @required ContributionBloc contributionBloc,
+    @required int votes,
+    @required double payout,
+    @required int comments,
+    @required bool showAvatar,
+    @required bool showCard,
+    @required bool showCategory,
+    @required bool showStats,
+  }) {
     return StreamBuilder(
         stream: contributionBloc.filterStream,
         builder: (BuildContext context, snapshot) {
           //String filter = snapshot.data;
           return Padding(
             padding:
-                EdgeInsets.symmetric(vertical: 4, horizontal: useCards ? 8 : 0),
+                EdgeInsets.symmetric(vertical: 4, horizontal: showCard ? 8 : 0),
             child: Material(
-              elevation: useCards ? 4 : 0,
+              elevation: showCard ? 4 : 0,
               borderRadius:
-                  useCards ? BorderRadius.circular(8) : BorderRadius.zero,
+                  showCard ? BorderRadius.circular(8) : BorderRadius.zero,
               color: Theme.of(context).colorScheme.surface,
               child: InkWell(
                 onTap: () {
                   launchUrl(postUrl);
                 },
                 borderRadius:
-                    useCards ? BorderRadius.circular(8) : BorderRadius.zero,
+                    showCard ? BorderRadius.circular(8) : BorderRadius.zero,
                 child: Padding(
                   padding: EdgeInsets.symmetric(horizontal: 0),
                   child: Row(

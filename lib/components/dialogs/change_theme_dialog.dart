@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:utopian_rocks_2/bloc_providers/base_provider.dart';
+import 'package:utopian_rocks_2/blocs/settings_bloc.dart';
 import 'package:utopian_rocks_2/blocs/theme_bloc.dart';
+import 'package:utopian_rocks_2/models/settings_model.dart';
+import 'package:utopian_rocks_2/providers/settings_provider.dart';
 
 class ChangeThemeDialog {
   final BuildContext context;
@@ -12,7 +15,7 @@ class ChangeThemeDialog {
           return AlertDialog(
             contentPadding: EdgeInsets.zero,
             title: Text(
-              'Theme',
+              'Customise',
               style: TextStyle(fontWeight: FontWeight.w600),
             ),
             shape:
@@ -45,6 +48,7 @@ class __ChangeThemeState extends State<_ChangeTheme> {
   @override
   Widget build(BuildContext context) {
     final themeBloc = Provider.of<ThemeBloc>(context);
+    final settingsBloc = Provider.of<SettingsBloc>(context);
     return StreamBuilder(
       stream: themeBloc.getTheme,
       builder: (BuildContext context, AsyncSnapshot<Themes> themeSnapshot) {
@@ -52,41 +56,77 @@ class __ChangeThemeState extends State<_ChangeTheme> {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
-            RadioListTile(
-              groupValue: themeSnapshot.data,
-              value: Themes.dark,
-              onChanged: (Themes value) {
-                themeBloc.setTheme.add(value);
-              },
-              activeColor: Theme.of(context).colorScheme.primary,
-              title: Text('Dark Theme'),
+            Padding(
+              padding: const EdgeInsets.only(left: 24),
+              child: DropdownButton(
+                value: themeSnapshot.data,
+                items: [
+                  DropdownMenuItem(
+                    value: Themes.light,
+                    child: Text('Light Theme'),
+                  ),
+                  DropdownMenuItem(
+                    value: Themes.dark,
+                    child: Text('Dark Theme'),
+                  ),
+                  DropdownMenuItem(
+                    value: Themes.amoled,
+                    child: Text('Dark Theme(AMOLED)'),
+                  ),
+                  DropdownMenuItem(
+                    value: Themes.utopian,
+                    child: Text('Utopian Theme'),
+                  ),
+                ],
+                onChanged: themeBloc.setTheme.add,
+              ),
             ),
-            RadioListTile(
-              groupValue: themeSnapshot.data,
-              value: Themes.amoled,
-              onChanged: (Themes value) {
-                themeBloc.setTheme.add(value);
+            StreamBuilder(
+              stream: settingsBloc.getSettings,
+              builder: (context, AsyncSnapshot<SettingsModel> snapshot) {
+                if (snapshot.hasData) {
+                  return Column(
+                    children: <Widget>[
+                      CheckboxListTile(
+                        value: !snapshot.data.show_avatar,
+                        onChanged: (selected) {
+                          settingsBloc.setValue(
+                              Settings.SHOW_AVATAR, !selected);
+                        },
+                        title: Text('Hide Avatar'),
+                        controlAffinity: ListTileControlAffinity.leading,
+                      ),
+                      CheckboxListTile(
+                        value: !snapshot.data.show_category,
+                        onChanged: (selected) {
+                          settingsBloc.setValue(
+                              Settings.SHOW_CATEGORY, !selected);
+                        },
+                        title: Text('Hide Category Icon'),
+                        controlAffinity: ListTileControlAffinity.leading,
+                      ),
+                      CheckboxListTile(
+                        value: snapshot.data.show_card,
+                        onChanged: (selected) {
+                          settingsBloc.setValue(Settings.SHOW_CARD, selected);
+                        },
+                        title: Text('Display As Cards'),
+                        controlAffinity: ListTileControlAffinity.leading,
+                      ),
+                      CheckboxListTile(
+                        value: !snapshot.data.show_stats,
+                        onChanged: (selected) {
+                          settingsBloc.setValue(Settings.SHOW_STATS, !selected);
+                        },
+                        title: Text('Hide Extra Stats'),
+                        controlAffinity: ListTileControlAffinity.leading,
+                      ),
+                    ],
+                  );
+                } else {
+                  return Container();
+                }
               },
-              activeColor: Theme.of(context).colorScheme.primary,
-              title: Text('Dark Theme(AMOLED)'),
-            ),
-            RadioListTile(
-              groupValue: themeSnapshot.data,
-              value: Themes.light,
-              onChanged: (Themes value) {
-                themeBloc.setTheme.add(value);
-              },
-              activeColor: Theme.of(context).colorScheme.primary,
-              title: Text('Light Theme'),
-            ),
-            RadioListTile(
-              groupValue: themeSnapshot.data,
-              value: Themes.utopian,
-              onChanged: (Themes value) {
-                themeBloc.setTheme.add(value);
-              },
-              activeColor: Theme.of(context).colorScheme.primary,
-              title: Text('Utopian Theme'),
             ),
           ],
         );
