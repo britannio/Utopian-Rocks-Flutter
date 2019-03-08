@@ -45,6 +45,7 @@ class HomePageState extends State<HomePage> {
           child: ContributionPage(),
         ),
       ),
+      // TODO allow this to be expanded vertically
       bottomNavigationBar: AnimatedContainer(
         duration: Duration(milliseconds: 300),
         height: allChips ? 240 : 48,

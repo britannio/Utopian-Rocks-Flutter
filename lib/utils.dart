@@ -11,7 +11,6 @@ List<Contribution> applyFilter(
 ) {
   if (filter.isNotEmpty && !(filter.contains('all') && filter.length == 1)) {
     return contributions.where((con) => filter.contains(con.category)).toList();
-    // TODO make sure it distinguishes Tutorials and Video-Tutorials
   }
 
   return contributions;

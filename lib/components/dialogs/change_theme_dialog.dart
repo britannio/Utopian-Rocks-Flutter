@@ -86,7 +86,7 @@ class __ChangeThemeState extends State<_ChangeTheme> {
                   return Column(
                     children: <Widget>[
                       CheckboxListTile(
-                        value: snapshot.data.show_avatar,
+                        value: snapshot.data.showAvatar,
                         onChanged: (selected) {
                           settingsBloc.setValue(Settings.SHOW_AVATAR, selected);
                         },
@@ -94,7 +94,7 @@ class __ChangeThemeState extends State<_ChangeTheme> {
                         controlAffinity: ListTileControlAffinity.leading,
                       ),
                       CheckboxListTile(
-                        value: snapshot.data.show_category,
+                        value: snapshot.data.showCategory,
                         onChanged: (selected) {
                           settingsBloc.setValue(
                               Settings.SHOW_CATEGORY, selected);
@@ -103,7 +103,7 @@ class __ChangeThemeState extends State<_ChangeTheme> {
                         controlAffinity: ListTileControlAffinity.leading,
                       ),
                       CheckboxListTile(
-                        value: snapshot.data.show_card,
+                        value: snapshot.data.showCard,
                         onChanged: (selected) {
                           settingsBloc.setValue(Settings.SHOW_CARD, selected);
                         },
@@ -111,7 +111,7 @@ class __ChangeThemeState extends State<_ChangeTheme> {
                         controlAffinity: ListTileControlAffinity.leading,
                       ),
                       CheckboxListTile(
-                        value: snapshot.data.show_stats,
+                        value: snapshot.data.showStats,
                         onChanged: (selected) {
                           settingsBloc.setValue(Settings.SHOW_STATS, selected);
                         },

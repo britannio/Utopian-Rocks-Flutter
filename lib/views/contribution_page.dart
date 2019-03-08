@@ -4,7 +4,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:utopian_rocks_2/bloc_providers/base_provider.dart';
 import 'package:utopian_rocks_2/blocs/contribution_bloc.dart';
 import 'package:utopian_rocks_2/blocs/settings_bloc.dart';
-import 'package:utopian_rocks_2/components/dialogs/about_dialog.dart';
+//import 'package:utopian_rocks_2/components/dialogs/about_dialog.dart';
 import 'package:utopian_rocks_2/components/dialogs/change_theme_dialog.dart';
 import 'package:utopian_rocks_2/models/contribution_model.dart';
 import 'package:utopian_rocks_2/models/settings_model.dart';
@@ -36,7 +36,7 @@ class ContributionPage extends StatelessWidget {
   }
 
   Widget _appBar(BuildContext context) {
-    List<String> options = ['About', 'Customise'];
+    //List<String> options = ['About', 'Customise'];
     return Material(
       color: Theme.of(context).colorScheme.primaryVariant,
       child: Column(
@@ -206,10 +206,10 @@ class __PageState extends State<_Page> with AutomaticKeepAliveClientMixin {
                       votes: snapshot.data[index].totalVotes,
                       payout: snapshot.data[index].totalPayout,
                       comments: snapshot.data[index].totalComments,
-                      showAvatar: settingsSnapshot.data.show_avatar,
-                      showCard: settingsSnapshot.data.show_card,
-                      showCategory: settingsSnapshot.data.show_category,
-                      showStats: settingsSnapshot.data.show_stats,
+                      showAvatar: settingsSnapshot.data.showAvatar,
+                      showCard: settingsSnapshot.data.showCard,
+                      showCategory: settingsSnapshot.data.showCategory,
+                      showStats: settingsSnapshot.data.showStats,
                     );
                   });
             },
@@ -241,7 +241,6 @@ class __PageState extends State<_Page> with AutomaticKeepAliveClientMixin {
     return StreamBuilder(
         stream: contributionBloc.filterStream,
         builder: (BuildContext context, snapshot) {
-          //String filter = snapshot.data;
           return Padding(
             padding: EdgeInsets.symmetric(
                 vertical: showCard ? 4 : 2, horizontal: showCard ? 8 : 0),

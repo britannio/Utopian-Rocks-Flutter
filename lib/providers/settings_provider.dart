@@ -11,10 +11,10 @@ class SettingsProvider {
     bool showCategory = prefs.getBool(settingsKeys[Settings.SHOW_CATEGORY]) ?? true;
     bool showStats = prefs.getBool(settingsKeys[Settings.SHOW_STATS]) ?? false;
 
-    settingsModel.show_avatar = showAvatar;
-    settingsModel.show_card = showCard;
-    settingsModel.show_category = showCategory;
-    settingsModel.show_stats = showStats;
+    settingsModel.showAvatar = showAvatar;
+    settingsModel.showCard = showCard;
+    settingsModel.showCategory = showCategory;
+    settingsModel.showStats = showStats;
 
     return settingsModel;
   }

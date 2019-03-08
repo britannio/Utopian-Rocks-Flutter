@@ -53,7 +53,6 @@ class ContributionBloc {
         Observable.combineLatest2(_filter, _pendingUpvoteStream, applyFilter)
             .asBroadcastStream();
 
-    // TODO FOR DEBUGGING PURPOSES
     _filter.listen((filterList) => print('Current filters $filterList'));
   }
 
