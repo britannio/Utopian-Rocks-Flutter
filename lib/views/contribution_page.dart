@@ -29,7 +29,6 @@ class ContributionPage extends StatelessWidget {
                 ],
               ),
             ),
-            //_stats(context),
           ],
         ),
       ),
@@ -37,7 +36,7 @@ class ContributionPage extends StatelessWidget {
   }
 
   Widget _appBar(BuildContext context) {
-    List<String> options = [/* 'About',  */ 'Customise'];
+    List<String> options = ['About', 'Customise'];
     return Material(
       color: Theme.of(context).colorScheme.primaryVariant,
       child: Column(
@@ -56,7 +55,13 @@ class ContributionPage extends StatelessWidget {
                       fontFamily: 'Quantico'),
                 ),
               ),
-              PopupMenuButton<String>(
+              IconButton(
+                icon: Icon(FontAwesomeIcons.slidersH),
+                color: Theme.of(context).colorScheme.onPrimary,
+                tooltip: 'Customise',
+                onPressed: () => ChangeThemeDialog(context),
+              )
+              /*  PopupMenuButton<String>(
                 tooltip: 'Options',
                 icon: Icon(
                   Icons.more_vert,
@@ -89,7 +94,7 @@ class ContributionPage extends StatelessWidget {
                       break;
                   }
                 },
-              )
+              ) */
             ],
           ),
           TabBar(
@@ -120,62 +125,6 @@ class ContributionPage extends StatelessWidget {
       ),
     );
   }
-
-  /* Widget _stats(BuildContext context) {
-    final steemBloc = Provider.of<SteemBloc>(context);
-    return Column(
-      children: <Widget>[
-        Divider(
-          height: 0,
-        ),
-        Container(
-          color: Theme.of(context).colorScheme.surface,
-          padding: EdgeInsets.symmetric(vertical: 4),
-          child: Row(
-            children: <Widget>[
-              SizedBox(width: 6),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  StreamBuilder(
-                    stream: steemBloc.timer,
-                    builder: (context, timerSnapshot) => Text(
-                          'Next Vote Cycle: ${DateFormat.Hms().format(DateTime(0, 0, 0, 0, 0, timerSnapshot.data ?? 0))}',
-                          style: TextStyle(
-                              color: Theme.of(context).colorScheme.onSurface,
-                              fontSize: 18,
-                              fontFamily: 'Quantico'),
-                        ),
-                  ),
-                  StreamBuilder(
-                    stream: steemBloc.voteCount,
-                    // toStringAsPrecision(4) converts the double to 4 s.f.
-                    builder: (context, voteCountSnapshot) => Text(
-                          'Vote Power: ${voteCountSnapshot.data != 100.0 || null ? voteCountSnapshot.data?.toStringAsPrecision(4) ?? 0 : 100.0}',
-                          style: TextStyle(
-                              color: Theme.of(context).colorScheme.onSurface,
-                              fontSize: 18,
-                              fontFamily: 'Quantico'),
-                        ),
-                  ),
-                ],
-              ),
-              /* Row(
-                    children: <Widget>[
-                      Icon(FontAwesomeIcons.pencilAlt),
-                      SizedBox(width: 8),
-                      Text(
-                        '12',
-                        style: TextStyle(fontSize: 18),
-                      )
-                    ],
-                  ), */
-            ],
-          ),
-        ),
-      ],
-    );
-  } */
 }
 
 class _Page extends StatefulWidget {
@@ -207,119 +156,68 @@ class __PageState extends State<_Page> with AutomaticKeepAliveClientMixin {
         stream = contributionBloc.pendingUpvoteStream;
         break;
     }
-    return ListView(
-      children: <Widget>[
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            /*  Padding(
-              padding: EdgeInsets.only(left: 12,top: 8),
-              child: StreamBuilder(
-                stream: contributionBloc.filterStream,
-                builder:
-                    (BuildContext context, AsyncSnapshot<String> snapshot) {
-                  if (snapshot.hasData) {
-                    return Text(
-                      '${formattedCategories[snapshot.data]}',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    );
-                  } else {
-                    return Container();
-                  }
-                },
-              ),
-            ), */
-            // Hide avatar checkbox, Show additional stats, switch between card and tile
-            /* Padding(
-              padding: EdgeInsets.only(right: 8),
-              child: Tooltip(
-                message: 'Customise',
-                child: InkWell(
-                  onTap: () {
-                    setState(() {
-                      useCards = !useCards;
-                    });
-                  },
-                  borderRadius: BorderRadius.circular(30),
-                  child: Padding(
-                    padding: EdgeInsets.all(8),
-                    child: Icon(
-                      Icons.view_agenda,
-                      color: Colors.grey,
-                    ),
+    return StreamBuilder(
+      stream: settingsBloc.getSettings,
+      builder: (context, AsyncSnapshot<SettingsModel> settingsSnapshot) {
+        if (settingsSnapshot.hasData) {
+          return StreamBuilder(
+            stream: stream,
+            builder: (
+              BuildContext context,
+              AsyncSnapshot<List<Contribution>> snapshot,
+            ) {
+              // No data
+              if (!snapshot.hasData)
+                return Center(
+                  child: CircularProgressIndicator(),
+                );
+              // No data
+              if (snapshot.data.length == 0) {
+                return Center(
+                  child: Text(
+                    'No Contributions for this category',
+                    style: TextStyle(
+                        color: Theme.of(context).colorScheme.onBackground),
                   ),
-                ),
-              ),
-            ), */
-          ],
-        ),
-        StreamBuilder(
-          stream: settingsBloc.getSettings,
-          builder: (context, AsyncSnapshot<SettingsModel> settingsSnapshot) {
-            if (settingsSnapshot.hasData) {
-              return StreamBuilder(
-                stream: stream,
-                builder: (
-                  BuildContext context,
-                  AsyncSnapshot<List<Contribution>> snapshot,
-                ) {
-                  // No data
-                  if (!snapshot.hasData)
-                    return Center(
-                      child: CircularProgressIndicator(),
+                );
+              }
+              return ListView.builder(
+                  padding: EdgeInsets.symmetric(vertical: 4),
+                  itemCount: snapshot.data.length,
+                  primary: false,
+                  shrinkWrap: true,
+                  itemBuilder: (context, index) {
+                    String category = snapshot.data[index].category;
+                    int iconCode = icons[category];
+                    String repo = checkRepo(snapshot, index);
+                    String timestamp =
+                        convertTimestamp(snapshot, index, widget.pageName);
+                    Color categoryColor = iconColors[category];
+                    return _content(
+                      context,
+                      title: snapshot.data[index].title,
+                      subtitle: '$repo • $timestamp',
+                      icon: iconCode,
+                      iconColor: categoryColor,
+                      avatarUrl:
+                          'https://steemitimages.com/u/${snapshot.data[index].author}/avatar',
+                      postUrl: snapshot.data[index].url,
+                      contributionBloc: contributionBloc,
+                      votes: snapshot.data[index].totalVotes,
+                      payout: snapshot.data[index].totalPayout,
+                      comments: snapshot.data[index].totalComments,
+                      showAvatar: settingsSnapshot.data.show_avatar,
+                      showCard: settingsSnapshot.data.show_card,
+                      showCategory: settingsSnapshot.data.show_category,
+                      showStats: settingsSnapshot.data.show_stats,
                     );
-                  // No data
-                  if (snapshot.data.length == 0) {
-                    return Center(
-                      child: Text(
-                        'No Contributions for this category',
-                        style: TextStyle(
-                            color: Theme.of(context).colorScheme.onBackground),
-                      ),
-                    );
-                  }
-                  return ListView.builder(
-                      padding: EdgeInsets.only(bottom: 4),
-                      itemCount: snapshot.data.length,
-                      primary: false,
-                      shrinkWrap: true,
-                      itemBuilder: (context, index) {
-                        String category = snapshot.data[index].category;
-                        int iconCode = icons[category];
-                        String repo = checkRepo(snapshot, index);
-                        String timestamp =
-                            convertTimestamp(snapshot, index, widget.pageName);
-                        Color categoryColor = iconColors[category];
-                        return _content(
-                          context,
-                          title: snapshot.data[index].title,
-                          subtitle: '$repo • $timestamp',
-                          icon: iconCode,
-                          iconColor: categoryColor,
-                          avatarUrl:
-                              'https://steemitimages.com/u/${snapshot.data[index].author}/avatar',
-                          postUrl: snapshot.data[index].url,
-                          contributionBloc: contributionBloc,
-                          votes: snapshot.data[index].totalVotes,
-                          payout: snapshot.data[index].totalPayout,
-                          comments: snapshot.data[index].totalComments,
-                          showAvatar: settingsSnapshot.data.show_avatar,
-                          showCard: settingsSnapshot.data.show_card,
-                          showCategory: settingsSnapshot.data.show_category,
-                          showStats: settingsSnapshot.data.show_stats,
-                        );
-                      });
-                },
-              );
-            } else {
-              return CircularProgressIndicator();
-            }
-          },
-        ),
-      ],
+                  });
+            },
+          );
+        } else {
+          return Center(child: CircularProgressIndicator());
+        }
+      },
     );
   }
 
@@ -345,8 +243,8 @@ class __PageState extends State<_Page> with AutomaticKeepAliveClientMixin {
         builder: (BuildContext context, snapshot) {
           //String filter = snapshot.data;
           return Padding(
-            padding:
-                EdgeInsets.symmetric(vertical: 4, horizontal: showCard ? 8 : 0),
+            padding: EdgeInsets.symmetric(
+                vertical: showCard ? 4 : 2, horizontal: showCard ? 8 : 0),
             child: Material(
               elevation: showCard ? 4 : 0,
               borderRadius:

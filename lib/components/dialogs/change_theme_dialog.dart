@@ -10,32 +10,31 @@ class ChangeThemeDialog {
 
   ChangeThemeDialog(this.context) {
     showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            contentPadding: EdgeInsets.zero,
-            title: Text(
-              'Customise',
-              style: TextStyle(fontWeight: FontWeight.w600),
-            ),
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-            content: _ChangeTheme(),
-            actions: <Widget>[
-              FlatButton(
-                child: Text(
-                  'DISMISS',
-                  style: TextStyle(
-                      color: Theme.of(context).colorScheme.primary,
-                      fontWeight: FontWeight.bold),
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          contentPadding: EdgeInsets.zero,
+          title: Text(
+            'Customise',
+            style: TextStyle(fontWeight: FontWeight.w600),
+          ),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+          content: _ChangeTheme(),
+          actions: <Widget>[
+            FlatButton(
+              child: Text(
+                'DISMISS',
+                style: TextStyle(
+                  color: Theme.of(context).colorScheme.primary,
+                  fontWeight: FontWeight.bold,
                 ),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
               ),
-            ],
-          );
-        });
+              onPressed: () => Navigator.of(context).pop(),
+            ),
+          ],
+        );
+      },
+    );
   }
 }
 
@@ -44,7 +43,6 @@ class _ChangeTheme extends StatefulWidget {
 }
 
 class __ChangeThemeState extends State<_ChangeTheme> {
-  //Themes currentTheme = Themes.dark;
   @override
   Widget build(BuildContext context) {
     final themeBloc = Provider.of<ThemeBloc>(context);
@@ -88,21 +86,20 @@ class __ChangeThemeState extends State<_ChangeTheme> {
                   return Column(
                     children: <Widget>[
                       CheckboxListTile(
-                        value: !snapshot.data.show_avatar,
+                        value: snapshot.data.show_avatar,
                         onChanged: (selected) {
-                          settingsBloc.setValue(
-                              Settings.SHOW_AVATAR, !selected);
+                          settingsBloc.setValue(Settings.SHOW_AVATAR, selected);
                         },
-                        title: Text('Hide Avatar'),
+                        title: Text('Show Avatar'),
                         controlAffinity: ListTileControlAffinity.leading,
                       ),
                       CheckboxListTile(
-                        value: !snapshot.data.show_category,
+                        value: snapshot.data.show_category,
                         onChanged: (selected) {
                           settingsBloc.setValue(
-                              Settings.SHOW_CATEGORY, !selected);
+                              Settings.SHOW_CATEGORY, selected);
                         },
-                        title: Text('Hide Category Icon'),
+                        title: Text('Show Category Icon'),
                         controlAffinity: ListTileControlAffinity.leading,
                       ),
                       CheckboxListTile(
@@ -114,11 +111,11 @@ class __ChangeThemeState extends State<_ChangeTheme> {
                         controlAffinity: ListTileControlAffinity.leading,
                       ),
                       CheckboxListTile(
-                        value: !snapshot.data.show_stats,
+                        value: snapshot.data.show_stats,
                         onChanged: (selected) {
-                          settingsBloc.setValue(Settings.SHOW_STATS, !selected);
+                          settingsBloc.setValue(Settings.SHOW_STATS, selected);
                         },
-                        title: Text('Hide Extra Stats'),
+                        title: Text('Show Extra Stats'),
                         controlAffinity: ListTileControlAffinity.leading,
                       ),
                     ],

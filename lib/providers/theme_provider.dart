@@ -5,9 +5,6 @@ class ThemeProvider {
   Themes _theme;
 
   Future<Themes> getTheme() async {
-    if (_theme != null) {
-      return _theme;
-    }
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
     String themeString = prefs.getString('theme') ?? themeMap[Themes.light];
