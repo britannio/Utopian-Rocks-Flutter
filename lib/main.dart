@@ -66,24 +66,27 @@ class MyApp extends StatelessWidget {
     );
 
     final ThemeData _lightTheme = ThemeData(
-      colorScheme: ColorScheme.light().copyWith(
-        primary: Color(0xFF26A69A),
-        primaryVariant: Colors.white,
-        onPrimary: Colors.black,
-        secondary: Colors.white, //Color(0xFF26A69A),
-        secondaryVariant: Color(0xFFf6f8fa),
-        onSecondary: Colors.black,
-        surface: Colors.white,
-        onSurface: Colors.black,
-        background: Colors.white, //Color(0xFFf6f8fa),
-        onBackground: Colors.black,
-      ),
+      colorScheme: ColorScheme(
+          primary: Color(0xFF26A69A),
+          primaryVariant: Colors.white,
+          onPrimary: Colors.black,
+          secondary: Colors.white, //Color(0xFF26A69A),
+          secondaryVariant: Color(0xFFf6f8fa),
+          onSecondary: Colors.black,
+          surface: Colors.white,
+          onSurface: Colors.black,
+          background: Colors.white, //Color(0xFFf6f8fa),
+          onBackground: Colors.black,
+          brightness: Brightness.light,
+          error: Colors.red,
+          onError: Colors.white),
       fontFamily: 'Quantico',
       dividerColor: Color(0xFF272729),
       cardColor: Colors.white,
       brightness: Brightness.light,
       accentColor: Color(0xFF26A69A),
       dialogBackgroundColor: Colors.white,
+      buttonColor: Color(0xFFF8F8F8)
     );
 
     final ThemeData _blackTheme = ThemeData(

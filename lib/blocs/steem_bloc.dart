@@ -9,7 +9,7 @@ class SteemBloc {
   StreamController<double> _voteCount = StreamController<double>.broadcast();
   StreamController<int> _timer = StreamController<int>.broadcast();
 
-  Stream<double> get voteCount => _voteCount.stream;
+  Stream<double> get votePower => _voteCount.stream;
   Stream<int> get timer => _timer.stream;
 
   SteemBloc(this.api) {

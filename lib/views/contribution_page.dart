@@ -4,6 +4,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:utopian_rocks_2/bloc_providers/base_provider.dart';
 import 'package:utopian_rocks_2/blocs/contribution_bloc.dart';
 import 'package:utopian_rocks_2/blocs/settings_bloc.dart';
+import 'package:utopian_rocks_2/blocs/steem_bloc.dart';
 //import 'package:utopian_rocks_2/components/dialogs/about_dialog.dart';
 import 'package:utopian_rocks_2/components/dialogs/change_theme_dialog.dart';
 import 'package:utopian_rocks_2/models/contribution_model.dart';
@@ -37,23 +38,68 @@ class ContributionPage extends StatelessWidget {
 
   Widget _appBar(BuildContext context) {
     //List<String> options = ['About', 'Customise'];
+    SteemBloc steemBloc = Provider.of<SteemBloc>(context);
     return Material(
       color: Theme.of(context).colorScheme.primaryVariant,
       child: Column(
         children: <Widget>[
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
-              Padding(
-                padding: EdgeInsets.only(left: 16),
-                child: Text(
-                  'utopian_rocks',
-                  style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.w600,
-                      color: Theme.of(context).colorScheme.onPrimary,
-                      fontFamily: 'Quantico'),
+              Expanded(
+                child: Padding(
+                  padding: EdgeInsets.only(left: 16),
+                  child: Text(
+                    'utopian_rocks',
+                    style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.w600,
+                        color: Theme.of(context).colorScheme.onPrimary,
+                        fontFamily: 'Quantico'),
+                  ),
                 ),
+              ),
+              /* Tooltip(
+                message: 'Next Vote Cycle',
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).buttonColor,
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  padding: EdgeInsets.symmetric(horizontal: 6, vertical: 4),
+                  child: Row(
+                    children: <Widget>[
+                      Icon(FontAwesomeIcons.clock),
+                      SizedBox(width: 4),
+                      Text('2:19:26'),
+                    ],
+                  ),
+                ),
+              ),
+              SizedBox(width: 4), */
+              StreamBuilder(
+                stream: steemBloc.votePower,
+                builder:
+                    (BuildContext context, AsyncSnapshot<double> snapshot) {
+                  return Tooltip(
+                    message: 'Vote Power',
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Theme.of(context).buttonColor,
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      padding: EdgeInsets.symmetric(horizontal: 6, vertical: 4),
+                      child: Row(
+                        children: <Widget>[
+                          Icon(FontAwesomeIcons.bolt),
+                          SizedBox(width: 4),
+                          Text(snapshot.hasData
+                              ? snapshot.data.toStringAsFixed(2)
+                              : '    '),
+                        ],
+                      ),
+                    ),
+                  );
+                },
               ),
               IconButton(
                 icon: Icon(FontAwesomeIcons.slidersH),
@@ -181,37 +227,42 @@ class __PageState extends State<_Page> with AutomaticKeepAliveClientMixin {
                   ),
                 );
               }
-              return ListView.builder(
-                  padding: EdgeInsets.symmetric(vertical: 4),
-                  itemCount: snapshot.data.length,
-                  primary: false,
-                  shrinkWrap: true,
-                  itemBuilder: (context, index) {
-                    String category = snapshot.data[index].category;
-                    int iconCode = icons[category];
-                    String repo = checkRepo(snapshot, index);
-                    String timestamp =
-                        convertTimestamp(snapshot, index, widget.pageName);
-                    Color categoryColor = iconColors[category];
-                    return _content(
-                      context,
-                      title: snapshot.data[index].title,
-                      subtitle: '$repo • $timestamp',
-                      icon: iconCode,
-                      iconColor: categoryColor,
-                      avatarUrl:
-                          'https://steemitimages.com/u/${snapshot.data[index].author}/avatar',
-                      postUrl: snapshot.data[index].url,
-                      contributionBloc: contributionBloc,
-                      votes: snapshot.data[index].totalVotes,
-                      payout: snapshot.data[index].totalPayout,
-                      comments: snapshot.data[index].totalComments,
-                      showAvatar: settingsSnapshot.data.showAvatar,
-                      showCard: settingsSnapshot.data.showCard,
-                      showCategory: settingsSnapshot.data.showCategory,
-                      showStats: settingsSnapshot.data.showStats,
-                    );
-                  });
+
+              return Column(children: <Widget>[
+                Expanded(
+                  child: ListView.builder(
+                      padding: EdgeInsets.symmetric(vertical: 4),
+                      itemCount: snapshot.data.length,
+                      primary: false,
+                      shrinkWrap: true,
+                      itemBuilder: (context, index) {
+                        String category = snapshot.data[index].category;
+                        int iconCode = icons[category];
+                        String repo = checkRepo(snapshot, index);
+                        String timestamp =
+                            convertTimestamp(snapshot, index, widget.pageName);
+                        Color categoryColor = iconColors[category];
+                        return _content(
+                          context,
+                          title: snapshot.data[index].title,
+                          subtitle: '$repo • $timestamp',
+                          icon: iconCode,
+                          iconColor: categoryColor,
+                          avatarUrl:
+                              'https://steemitimages.com/u/${snapshot.data[index].author}/avatar',
+                          postUrl: snapshot.data[index].url,
+                          contributionBloc: contributionBloc,
+                          votes: snapshot.data[index].totalVotes,
+                          payout: snapshot.data[index].totalPayout,
+                          comments: snapshot.data[index].totalComments,
+                          showAvatar: settingsSnapshot.data.showAvatar,
+                          showCard: settingsSnapshot.data.showCard,
+                          showCategory: settingsSnapshot.data.showCategory,
+                          showStats: settingsSnapshot.data.showStats,
+                        );
+                      }),
+                )
+              ]);
             },
           );
         } else {
