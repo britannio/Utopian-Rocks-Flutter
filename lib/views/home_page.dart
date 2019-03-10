@@ -16,9 +16,9 @@ class HomePage extends StatefulWidget {
 }
 
 class HomePageState extends State<HomePage> {
+  bool allChips = false;
   @override
   Widget build(BuildContext context) {
-    bool allChips = false;
     ContributionBloc contributionBloc = Provider.of<ContributionBloc>(context);
     List<Widget> chips = categories
         .map(
@@ -45,7 +45,6 @@ class HomePageState extends State<HomePage> {
           child: ContributionPage(),
         ),
       ),
-      // TODO allow this to be expanded vertically
       bottomNavigationBar: AnimatedContainer(
         duration: Duration(milliseconds: 300),
         height: allChips ? 240 : 48,
@@ -55,44 +54,43 @@ class HomePageState extends State<HomePage> {
           child: Row(
             children: <Widget>[
               Expanded(
-                  child: allChips
-                      ? Wrap(
-                          alignment: WrapAlignment.center,
-                          children: chips,
+                child: StreamBuilder(
+                  stream: contributionBloc.filterStream,
+                  initialData: ['all'],
+                  builder: (context, snapshot) {
+                    List<String> filterList = snapshot.data;
+                    List<Widget> chipList = categories
+                        .map(
+                          (id) => Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 2),
+                                child: ChoiceChip(
+                                  label: Text(formattedCategories[id]),
+                                  labelStyle: TextStyle(color: Colors.white),
+                                  selected: filterList.contains(id),
+                                  selectedColor: iconColors[id],
+                                  onSelected: (bool inactive) {
+                                    inactive
+                                        ? contributionBloc.addFilter(id)
+                                        : contributionBloc.removeFilter(id);
+                                  },
+                                ),
+                              ),
                         )
-                      : StreamBuilder(
-                          stream: contributionBloc.filterStream,
-                          initialData: ['all'],
-                          builder: (context, snapshot) {
-                            List<String> filterList = snapshot.data;
-                            return ListView(
-                              scrollDirection: Axis.horizontal,
-                              children: categories
-                                  .map(
-                                    (id) => Padding(
-                                          padding: EdgeInsets.symmetric(
-                                              horizontal: 2),
-                                          child: ChoiceChip(
-                                            label:
-                                                Text(formattedCategories[id]),
-                                            labelStyle:
-                                                TextStyle(color: Colors.white),
-                                            selected: filterList.contains(id),
-                                            selectedColor: iconColors[id],
-                                            onSelected: (bool inactive) {
-                                              inactive
-                                                  ? contributionBloc
-                                                      .addFilter(id)
-                                                  : contributionBloc
-                                                      .removeFilter(id);
-                                            },
-                                          ),
-                                        ),
-                                  )
-                                  .toList(),
-                            );
-                          },
-                        )),
+                        .toList();
+                    if (allChips) {
+                      return Wrap(
+                        alignment: WrapAlignment.center,
+                        children: chipList,
+                      );
+                    } else {
+                      return ListView(
+                        scrollDirection: Axis.horizontal,
+                        children: chipList,
+                      );
+                    }
+                  },
+                ),
+              ),
               Align(
                 alignment: Alignment.bottomRight,
                 child: IconButton(
@@ -101,7 +99,11 @@ class HomePageState extends State<HomePage> {
                           ? FontAwesomeIcons.chevronDown
                           : FontAwesomeIcons.chevronUp,
                     ),
-                    onPressed: null),
+                    onPressed: () {
+                      setState(() {
+                        allChips = !allChips;
+                      });
+                    }),
               )
             ],
           ),
