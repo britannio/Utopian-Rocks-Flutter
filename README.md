@@ -1,2 +1,2 @@
-[![Codemagic build status](https://api.codemagic.io/apps/5c44897f07e2b7000f14016e/5c44897f07e2b7000f14016d/status_badge.svg)](https://codemagic.io/apps/5c44897f07e2b7000f14016e/5c44897f07e2b7000f14016d/latest_build)
+[![Codemagic build status](https://api.codemagic.io/apps/5c44897f07e2b7000f14016e/5c44897f07e2b7000f14016d/status_badge.svg)](https://codemagic.io/apps/5c44897f07e2b7000f14016e/5c44897f07e2b7000f14016d/latest_build) [![Build Status](https://app.bitrise.io/app/7677a96258ecb12d/status.svg?token=kvQA-1-UqFHnVf44FoZqWw&branch=master)](https://app.bitrise.io/app/7677a96258ecb12d)
 # Utopian Rocks Flutter(Unofficial)
