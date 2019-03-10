@@ -8,7 +8,8 @@ class SettingsProvider {
 
     bool showAvatar = prefs.getBool(settingsKeys[Settings.SHOW_AVATAR]) ?? true;
     bool showCard = prefs.getBool(settingsKeys[Settings.SHOW_CARD]) ?? false;
-    bool showCategory = prefs.getBool(settingsKeys[Settings.SHOW_CATEGORY]) ?? true;
+    bool showCategory =
+        prefs.getBool(settingsKeys[Settings.SHOW_CATEGORY]) ?? true;
     bool showStats = prefs.getBool(settingsKeys[Settings.SHOW_STATS]) ?? false;
 
     settingsModel.showAvatar = showAvatar;

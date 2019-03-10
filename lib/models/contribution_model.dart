@@ -7,10 +7,11 @@ class Contribution {
   final String reviewDate;
   final String title;
   final String url;
+  final String repositoryUrl;
   final String status;
   final int totalComments;
-  final double totalPayout;
   final int totalVotes;
+  final double totalPayout;
 
   Contribution(
     this.author,
@@ -22,6 +23,7 @@ class Contribution {
     this.title,
     this.totalPayout,
     this.url,
+    this.repositoryUrl,
     this.status,
     this.totalComments,
     this.totalVotes,
@@ -37,6 +39,7 @@ class Contribution {
             .replaceFirst('https://github.com/', ''),
         title = json['title'],
         url = json['url'],
+        repositoryUrl = json['repository'],
         created = json['created'],
         reviewDate = json['review_date'],
         status = json['status'],

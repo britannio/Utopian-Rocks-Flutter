@@ -5,7 +5,7 @@ import 'package:utopian_rocks_2/providers/rocks_api.dart';
 import 'package:utopian_rocks_2/bloc_providers/base_provider.dart';
 import 'package:utopian_rocks_2/blocs/contribution_bloc.dart';
 import 'package:utopian_rocks_2/providers/theme_provider.dart';
-import 'package:utopian_rocks_2/views/home_page.dart';
+import 'package:utopian_rocks_2/pages/home_page.dart';
 
 void main() => runApp(
       BlocProvider<ThemeBloc>(
@@ -45,70 +45,69 @@ class MyApp extends StatelessWidget {
     );
 
     final ThemeData _darkTheme = ThemeData(
-      colorScheme: ColorScheme.dark().copyWith(
-        primary: Color(0xFF26A69A), //Color(0xFF121213),
-        primaryVariant: Color(0xFF050505), //Color(0xFF00766C),
-        onPrimary: Colors.white,
-        secondary: Color(0xFF121213),
-        secondaryVariant: Color(0xFF050505),
-        onSecondary: Colors.white,
-        surface: Color(0xFF121213),
-        onSurface: Colors.white,
-        background: Color(0xFF050505),
-        onBackground: Colors.white,
-      ),
-      fontFamily: 'Quantico',
-      dividerColor: Color(0xFF272729),
-      cardColor: Color(0xFF121213),
-      brightness: Brightness.dark,
-      accentColor: Color(0xFF26A69A),
-      dialogBackgroundColor: Color(0xFF121213),
-    );
+        colorScheme: ColorScheme.dark().copyWith(
+          primary: Color(0xFF26A69A), //Color(0xFF121213),
+          primaryVariant: Color(0xFF050505), //Color(0xFF00766C),
+          onPrimary: Colors.white,
+          secondary: Color(0xFF121213),
+          secondaryVariant: Color(0xFF050505),
+          onSecondary: Colors.white,
+          surface: Color(0xFF121213),
+          onSurface: Colors.white,
+          background: Color(0xFF050505),
+          onBackground: Colors.white,
+        ),
+        fontFamily: 'Quantico',
+        dividerColor: Color(0xFF272729),
+        cardColor: Color(0xFF121213),
+        brightness: Brightness.dark,
+        accentColor: Color(0xFF26A69A),
+        dialogBackgroundColor: Color(0xFF121213),
+        buttonColor: Color(0xFF26A69A));
 
     final ThemeData _lightTheme = ThemeData(
-      colorScheme: ColorScheme(
-          primary: Color(0xFF26A69A),
-          primaryVariant: Colors.white,
-          onPrimary: Colors.black,
-          secondary: Colors.white, //Color(0xFF26A69A),
-          secondaryVariant: Color(0xFFf6f8fa),
-          onSecondary: Colors.black,
-          surface: Colors.white,
-          onSurface: Colors.black,
-          background: Colors.white, //Color(0xFFf6f8fa),
-          onBackground: Colors.black,
-          brightness: Brightness.light,
-          error: Colors.red,
-          onError: Colors.white),
-      fontFamily: 'Quantico',
-      dividerColor: Color(0xFF272729),
-      cardColor: Colors.white,
-      brightness: Brightness.light,
-      accentColor: Color(0xFF26A69A),
-      dialogBackgroundColor: Colors.white,
-      buttonColor: Color(0xFFF8F8F8)
-    );
+        colorScheme: ColorScheme(
+            primary: Color(0xFF26A69A),
+            primaryVariant: Colors.white,
+            onPrimary: Colors.black,
+            secondary: Colors.white, //Color(0xFF26A69A),
+            secondaryVariant: Color(0xFFf6f8fa),
+            onSecondary: Colors.black,
+            surface: Colors.white,
+            onSurface: Colors.black,
+            background: Colors.white, //Color(0xFFf6f8fa),
+            onBackground: Colors.black,
+            brightness: Brightness.light,
+            error: Colors.red,
+            onError: Colors.white),
+        fontFamily: 'Quantico',
+        dividerColor: Color(0xFF272729),
+        cardColor: Colors.white,
+        brightness: Brightness.light,
+        accentColor: Color(0xFF26A69A),
+        dialogBackgroundColor: Colors.white,
+        buttonColor: Color(0xFFF8F8F8));
 
     final ThemeData _blackTheme = ThemeData(
-      colorScheme: ColorScheme.dark().copyWith(
-        primary: Color(0xFF26A69A), //Color(0xFF121213),
-        primaryVariant: Color(0xFF050505), //Color(0xFF00766C),
-        onPrimary: Colors.white,
-        secondary: Colors.black, //Color(0xFF121213),
-        secondaryVariant: Color(0xFF121213),
-        onSecondary: Colors.white,
-        surface: Colors.black,
-        onSurface: Colors.white,
-        background: Colors.black,
-        onBackground: Colors.white,
-      ),
-      fontFamily: 'Quantico',
-      dividerColor: Color(0xFF272729),
-      cardColor: Color(0xFF121213),
-      brightness: Brightness.dark,
-      accentColor: Color(0xFF26A69A),
-      dialogBackgroundColor: Color(0xFF121213),
-    );
+        colorScheme: ColorScheme.dark().copyWith(
+          primary: Color(0xFF26A69A), //Color(0xFF121213),
+          primaryVariant: Color(0xFF050505), //Color(0xFF00766C),
+          onPrimary: Colors.white,
+          secondary: Colors.black, //Color(0xFF121213),
+          secondaryVariant: Color(0xFF121213),
+          onSecondary: Colors.white,
+          surface: Colors.black,
+          onSurface: Colors.white,
+          background: Colors.black,
+          onBackground: Colors.white,
+        ),
+        fontFamily: 'Quantico',
+        dividerColor: Color(0xFF272729),
+        cardColor: Color(0xFF121213),
+        brightness: Brightness.dark,
+        accentColor: Color(0xFF26A69A),
+        dialogBackgroundColor: Color(0xFF121213),
+        buttonColor: Color(0xFF26A69A));
     return StreamBuilder(
       stream: themeBloc.getTheme,
       builder: (BuildContext context, AsyncSnapshot<Themes> themeSnapshot) {

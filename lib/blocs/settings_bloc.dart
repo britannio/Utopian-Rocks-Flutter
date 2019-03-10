@@ -9,7 +9,7 @@ class SettingsBloc {
 
   Stream<SettingsModel> get getSettings => _settings.stream;
 
-  SettingsBloc(){
+  SettingsBloc() {
     _settingsProvider.getSettings().then(_settings.add);
   }
 

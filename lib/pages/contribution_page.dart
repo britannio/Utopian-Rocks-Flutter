@@ -9,6 +9,7 @@ import 'package:utopian_rocks_2/blocs/steem_bloc.dart';
 import 'package:utopian_rocks_2/components/dialogs/change_theme_dialog.dart';
 import 'package:utopian_rocks_2/models/contribution_model.dart';
 import 'package:utopian_rocks_2/models/settings_model.dart';
+import 'package:utopian_rocks_2/pages/contribution_detail_page.dart';
 import 'package:utopian_rocks_2/utils.dart';
 
 class ContributionPage extends StatelessWidget {
@@ -94,7 +95,7 @@ class ContributionPage extends StatelessWidget {
                           SizedBox(width: 4),
                           Text(snapshot.hasData
                               ? snapshot.data.toStringAsFixed(2)
-                              : '    '),
+                              : '       '),
                         ],
                       ),
                     ),
@@ -183,10 +184,6 @@ class _Page extends StatefulWidget {
 class __PageState extends State<_Page> with AutomaticKeepAliveClientMixin {
   @override
   bool get wantKeepAlive => true;
-  bool useCards = false;
-  bool showAvatar = true;
-  bool showCategory = true;
-  bool showStats = false;
 
   @override
   Widget build(BuildContext context) {
@@ -242,24 +239,23 @@ class __PageState extends State<_Page> with AutomaticKeepAliveClientMixin {
                         String timestamp =
                             convertTimestamp(snapshot, index, widget.pageName);
                         Color categoryColor = iconColors[category];
-                        return _content(
-                          context,
-                          title: snapshot.data[index].title,
-                          subtitle: '$repo • $timestamp',
-                          icon: iconCode,
-                          iconColor: categoryColor,
-                          avatarUrl:
-                              'https://steemitimages.com/u/${snapshot.data[index].author}/avatar',
-                          postUrl: snapshot.data[index].url,
-                          contributionBloc: contributionBloc,
-                          votes: snapshot.data[index].totalVotes,
-                          payout: snapshot.data[index].totalPayout,
-                          comments: snapshot.data[index].totalComments,
-                          showAvatar: settingsSnapshot.data.showAvatar,
-                          showCard: settingsSnapshot.data.showCard,
-                          showCategory: settingsSnapshot.data.showCategory,
-                          showStats: settingsSnapshot.data.showStats,
-                        );
+                        return _content(context,
+                            title: snapshot.data[index].title,
+                            subtitle: '$repo • $timestamp',
+                            icon: iconCode,
+                            iconColor: categoryColor,
+                            avatarUrl:
+                                'https://steemitimages.com/u/${snapshot.data[index].author}/avatar',
+                            postUrl: snapshot.data[index].url,
+                            contributionBloc: contributionBloc,
+                            votes: snapshot.data[index].totalVotes,
+                            payout: snapshot.data[index].totalPayout,
+                            comments: snapshot.data[index].totalComments,
+                            showAvatar: settingsSnapshot.data.showAvatar,
+                            showCard: settingsSnapshot.data.showCard,
+                            showCategory: settingsSnapshot.data.showCategory,
+                            showStats: settingsSnapshot.data.showStats,
+                            contribution: snapshot.data[index]);
                       }),
                 )
               ]);
@@ -288,7 +284,10 @@ class __PageState extends State<_Page> with AutomaticKeepAliveClientMixin {
     @required bool showCard,
     @required bool showCategory,
     @required bool showStats,
+    @required Contribution contribution,
   }) {
+    // TODO use settings bloc
+    bool useWebView = true;
     return StreamBuilder(
         stream: contributionBloc.filterStream,
         builder: (BuildContext context, snapshot) {
@@ -302,7 +301,17 @@ class __PageState extends State<_Page> with AutomaticKeepAliveClientMixin {
               color: Theme.of(context).colorScheme.surface,
               child: InkWell(
                 onTap: () {
-                  launchUrl(postUrl);
+                  useWebView
+                      ? Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ContributionDetailPage(
+                                  contribution: contribution,
+                                ),
+                            fullscreenDialog: true,
+                          ),
+                        )
+                      : launchUrl(postUrl);
                 },
                 borderRadius:
                     showCard ? BorderRadius.circular(8) : BorderRadius.zero,

@@ -1,4 +1,3 @@
-
 class SettingsModel {
   bool showAvatar;
   bool showCategory;
